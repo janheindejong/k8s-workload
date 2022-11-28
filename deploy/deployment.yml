@@ -1,0 +1,49 @@
+kind: Namespace 
+apiVersion: v1 
+metadata: 
+  name: volume-experiment
+---
+kind: StatefulSet 
+apiVersion: apps/v1 
+metadata: 
+  name: webapp
+  namespace: volume-experiment
+spec: 
+  replicas: 3
+  selector: 
+    matchLabels: 
+      app: webapp
+  template: 
+    metadata: 
+      labels: 
+        app: webapp
+    spec: 
+      containers: 
+        - name: nginx 
+          image: nginx:latest 
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: database-pvc 
+              mountPath: /usr/share/nginx/html 
+  volumeClaimTemplates: 
+  - metadata: 
+      name: database-pvc
+      namespace: volume-experiment
+    spec: 
+      accessModes: 
+        - ReadWriteOnce 
+      resources: 
+        requests: 
+          storage: 10k
+---
+kind: Service
+apiVersion: v1 
+metadata: 
+  name: webapp-svc
+  namespace: volume-experiment
+spec: 
+  type: NodePort
+  ports: 
+    - port: 80 
+  selector: 
+    app: webapp
