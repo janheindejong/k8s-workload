@@ -54,8 +54,28 @@ metadata:
   name: webapp-svc
   namespace: volume-experiment
 spec: 
-  type: NodePort
+  type: ClusterIP
   ports: 
     - port: 80 
   selector: 
     app: webapp
+--- 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: volume-experiment-ingress
+  namespace: volume-experiment
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: cluster.minikube.internal
+      http:
+        paths:
+          - path: /volume-experiment
+            pathType: Prefix
+            backend:
+              service:
+                name: webapp-svc
+                port:
+                  number: 80
