@@ -1,0 +1,25 @@
+kind: Namespace 
+apiVersion: v1 
+metadata: 
+  name: business-workload 
+---
+kind: Deployment 
+apiVersion: apps/v1 
+metadata: 
+  name: logging-app
+  namespace: business-workload
+spec: 
+  replicas: 3
+  selector: 
+    matchLabels: 
+      app: logging-app
+  template: 
+    metadata: 
+      labels:
+        app: logging-app 
+    spec: 
+      containers: 
+        - name: logging-app
+          image: busybox:1.28
+          command: ['sh', '-c', 'while true; do echo Hello from $(hostname) at $(date); sleep 2; done']
+
