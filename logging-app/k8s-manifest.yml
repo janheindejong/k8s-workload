@@ -22,4 +22,10 @@ spec:
         - name: logging-app
           image: busybox:1.28
           command: ['sh', '-c', 'while true; do echo Hello from $(hostname) at $(date); sleep 2; done']
-
+          resources:
+            limits:
+              cpu: "0.1"
+              memory: "100M"
+            requests:
+              cpu: "0.1"
+              memory: "100M"

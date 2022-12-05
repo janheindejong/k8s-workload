@@ -1,13 +1,13 @@
 kind: Namespace 
 apiVersion: v1 
 metadata: 
-  name: volume-experiment
+  name: hello-world
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: database-pvc
-  namespace: volume-experiment
+  namespace: hello-world
 spec: 
   accessModes: 
     - ReadWriteOnce 
@@ -18,20 +18,20 @@ spec:
 kind: Deployment 
 apiVersion: apps/v1 
 metadata: 
-  name: webapp
-  namespace: volume-experiment
+  name: hello-world
+  namespace: hello-world
 spec: 
   replicas: 1
   selector: 
     matchLabels: 
-      app: webapp
+      app: hello-world
   template: 
     metadata: 
       labels: 
-        app: webapp
+        app: hello-world
     spec: 
       containers: 
-        - name: app 
+        - name: hello-world 
           image: nginx:latest 
           resources:
             limits:
@@ -58,20 +58,20 @@ spec:
 kind: Service
 apiVersion: v1 
 metadata: 
-  name: webapp-svc
-  namespace: volume-experiment
+  name: hello-world-svc
+  namespace: hello-world
 spec: 
   type: ClusterIP
   ports: 
     - port: 80 
   selector: 
-    app: webapp
+    app: hello-world
 --- 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: volume-experiment-ingress
-  namespace: volume-experiment
+  name: hello-world-ingress
+  namespace: hello-world
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -79,10 +79,10 @@ spec:
     - host: cluster.minikube.internal
       http:
         paths:
-          - path: /volume-experiment
+          - path: /hello-world
             pathType: Prefix
             backend:
               service:
-                name: webapp-svc
+                name: hello-world-svc
                 port:
                   number: 80
