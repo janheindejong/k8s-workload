@@ -27,3 +27,12 @@ persistence:
 sidecar: 
   datasources:
     enabled: true
+
+datasources: 
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      url: http://loki.loki-stack.svc.cluster.local:3100
+      access: proxy
